@@ -1,106 +1,160 @@
-# Multi-Agent SOAR
+# 🛡️ Multi-Agent SOAR
 
-A portfolio-grade security orchestration project that demonstrates playbooks, alert correlation, incident ticketing, and automated response workflows.
+> **Security Orchestration, Automation & Response** powered by a multi-agent architecture.  
+> Autonomous threat triage, IOC enrichment, incident management, playbook execution, and compliance reporting — all in one CLI-driven system.
 
-The goal is to show how a multi-agent SOAR pipeline can help analysts reduce manual work, standardize responses, and accelerate incident handling.
+![Python](https://img.shields.io/badge/Python-3.10+-blue)
+![License](https://img.shields.io/badge/License-MIT-green)
+![Framework](https://img.shields.io/badge/Framework-CrewAI-purple)
+![Status](https://img.shields.io/badge/Status-Active-brightgreen)
 
-## Why this project exists
+---
 
-This project was created to demonstrate a practical SOAR workflow that combines automation and human review.
-It focuses on the core tasks used in incident response: ingest alerts, correlate related events, enrich context, open tickets, and execute playbooks.
+## 🏗️ Architecture
 
-The repository is intentionally structured as a portfolio project to show:
-- orchestration and playbook thinking.
-- alert handling and routing.
-- incident ticketing and tracking.
-- a realistic path toward a production-ready SOAR platform.
+```
+Alert Input
+    │
+    ▼
+[TriageAgent]          → Severity scoring, MITRE ATT&CK mapping, FP detection
+    │
+    ▼
+[EnrichmentAgent]      → IOC extraction, OSINT, VirusTotal/EXA enrichment
+    │
+    ▼
+[IncidentAgent]        → Incident creation, correlation, SLA monitoring
+    │
+    ▼
+[PlaybookAgent]        → Automated playbook matching & execution
+    │
+    ▼
+[ContainmentAgent]     → IP block, domain sinkhole, host isolation, hash quarantine
+    │
+    ▼
+[NotificationAgent]    → Alerts for CRITICAL/HIGH incidents
+    │
+    ▼
+[ComplianceAgent]      → ISO 27001 / SOC 2 reports, KPI dashboard
+```
 
-## Core capabilities
+---
 
-- Alert ingestion and normalization.
-- Alert correlation across multiple sources.
-- Playbook-driven response actions.
-- Incident ticket creation and tracking.
-- Enrichment and containment steps.
-- Analyst review and approval gates.
+## ✨ Features
 
-## Workflow stages
+| Feature | Details |
+|---|---|
+| **7 Autonomous Agents** | Triage, Enrichment, Incident, Playbook, Containment, Notification, Compliance |
+| **MITRE ATT&CK Mapping** | Automatic TTP tagging per incident |
+| **Automated Containment** | Firewall ACL, DNS sinkhole, EDR isolation, AD account lockout |
+| **Compliance Reports** | ISO 27001:2022 and SOC 2 Type II |
+| **Interactive CLI** | Full menu-driven interface with real-time KPIs |
+| **React Dashboard** | Network graph + live SOC dashboard (JSX) |
+| **Multi-Tenant** | Per-tenant SLA configs and incident isolation |
+| **In-Memory Store** | Thread-safe, replaceable with any DB |
 
-### 1. Ingest
-Collect alerts from webhook, email, or SIEM-style inputs.
+---
 
-### 2. Correlate
-Group related alerts into a single incident context.
+## 🚀 Quick Start
 
-### 3. Enrich
-Add threat intel, asset data, and response context.
+```bash
+# 1. Repo klonen
+git clone https://github.com/<yourname>/multi-agent-soar.git
+cd multi-agent-soar
 
-### 4. Ticket
-Create or update an incident ticket with the relevant details.
+# 2. Virtual Environment
+python -m venv .venv && source .venv/bin/activate  # Linux/Mac
+# oder: .venvScriptsactivate  # Windows
 
-### 5. Respond
-Run the selected playbook action and record the result.
+# 3. Dependencies installieren
+pip install -r requirements.txt
 
-## Architecture / Layer overview
+# 4. CLI starten
+python main.py
+```
 
-### 1. Presentation layer
-The frontend shows incidents, playbooks, and response status.
+---
 
-Main goals:
-- Show open incidents.
-- Present playbook execution state.
-- Display ticket references and analyst notes.
+## 📋 Requirements
 
-Key entry point:
-- `frontend/index.html`
+```
+crewai>=0.28.0
+langchain>=0.1.0
+langchain-community>=0.0.20
+langchain-core>=0.1.0
+```
 
-### 2. Orchestration layer
-The orchestrator manages the response flow.
+---
 
-Main goals:
-- Route incoming alerts to the correct playbook.
-- Decide when analyst approval is required.
-- Track the execution state of each response.
+## 🎮 CLI Menu
 
-Key entry point:
-- `backend/app/main.py`
+```
+ Demo starten          – Alle Sample-Alerts verarbeiten
+[8] Einzelnen Alert       – Manuell auswählen
+[9] Incidents anzeigen    – Mit Timeline & MITRE
+[2] Dashboard / KPIs      – MTTR, Automation Rate, Severity
+[3] Compliance Report     – ISO 27001 oder SOC 2
+[4] Containment Status    – Geblockte IPs, Domains, Hashes
+[5] Playbooks anzeigen    – Aktive Playbooks
+[6] Incident bearbeiten   – Status, Notizen, Containment
+```
 
-### 3. Automation layer
-This layer contains the playbook logic.
+---
 
-Main goals:
-- Execute repeatable response steps.
-- Enrich incidents.
-- Update tickets.
-- Trigger follow-up actions.
+## 🧩 Agent Overview
 
-Key components:
-- Playbook definitions.
-- Correlation rules.
-- Ticketing logic.
-- Containment actions.
+### `TriageAgent`
+Bewertet eingehende Alerts mit einem Triage-Score (0–100) und filtert False Positives heraus. Mapped TTPs automatisch auf MITRE ATT&CK.
 
-### 4. Data layer
-The data layer stores incident history and action results.
+### `EnrichmentAgent`
+Extrahiert Observables (IPs, Domains, Hashes) und reichert sie mit Threat-Intel-Quellen an.
 
-Main goals:
-- Keep execution logs.
-- Store incident state.
-- Preserve audit details.
-- Support future integrations.
+### `IncidentAgent`
+Erstellt und korreliert Incidents, überwacht SLA-Fristen und verwaltet den Lifecycle.
 
-## Suggested module map
+### `PlaybookAgent`
+Matched Incidents auf passende Playbooks und führt diese automatisch aus.
 
-```text
-multi-agent-soar/
-├── README.md
-├── docs/
-│   ├── architecture.md
-│   └── roadmap.md
-├── frontend/
-│   └── index.html
-├── backend/
-│   ├── app/
-│   │   └── main.py
-│   └── requirements.txt
-└── tests/
+### `ContainmentAgent`
+Führt automatische Containment-Aktionen durch:
+- `block_ip` → Firewall ACL
+- `block_domain` → DNS Sinkhole
+- `quarantine_hash` → EDR
+- `isolate_host` → Netzwerk-Isolation
+- `lock_account` → Active Directory
+
+### `ComplianceAgent`
+Generiert ISO 27001:2022 und SOC 2 Type II Reports mit SLA-Compliance-Metriken und MITRE Frequency-Analyse.
+
+---
+
+## 📊 Sample Alerts (built-in)
+
+- Ransomware Activity (CrowdStrike EDR) — CRITICAL
+- Phishing Email with Malicious Link — HIGH
+- Lateral Movement via Pass-the-Hash (SIEM) — CRITICAL
+- Suspicious PowerShell Execution (Defender) — HIGH
+- Data Exfiltration via HTTPS (DLP/SIEM) — CRITICAL
+- Brute Force on VPN Gateway (Firewall) — MEDIUM
+
+---
+
+## 🔐 Security Note
+
+This project uses **simulated APIs** for containment actions (Firewall, EDR, AD).  
+For production use, replace simulation stubs with real API integrations:
+- Microsoft Defender XDR API
+- CrowdStrike Falcon API
+- Active Directory / Entra ID
+- Jira / ServiceNow for ticketing
+
+---
+
+## 📄 License
+
+MIT License — see [LICENSE](LICENSE)
+
+---
+
+## 🤝 Contributing
+
+Pull Requests welcome! Please open an issue first for major changes.
