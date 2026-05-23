@@ -1,4 +1,4 @@
-# multi-agent-soar# Multi-Agent SOAR
+# Multi-Agent SOAR
 
 A portfolio-grade security orchestration project that demonstrates playbooks, alert correlation, incident ticketing, and automated response workflows.
 
